@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='netbox_fusioninventory_plugin',
-    version='0.1',
+    version='0.2',
     description='A Plugin for import devices from fusion inventory agent',
     url='https://gitlab.com/Milka64/netbox-fusioninventory-plugin',
     author='Michael Ricart',

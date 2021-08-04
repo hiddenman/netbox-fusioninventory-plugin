@@ -6,7 +6,7 @@ setup(
     version='0.1',
     description='A Plugin for import devices from fusion inventory agent',
     url='https://gitlab.com/',
-    author='Michaël Ricart',
+    author='Michael Ricart',
     license='BSD License',
     install_requires=[
         'bs4',

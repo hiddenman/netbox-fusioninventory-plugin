@@ -15,7 +15,7 @@ class PostXMLView(View):
         decompressed = zlib.decompress(request.body)
         if len(decompressed) > 200:
             xml_soup = bs4.BeautifulSoup(decompressed,features = "lxml")
-            parsed_device = utils.soup_to_dict(xml_soup, {})
+            parsed_device = utils.soup_to_dict(xml_soup)
             utils.created_or_update_device(parsed_device)
             return HttpResponse()
         else:

@@ -13,7 +13,7 @@ class FusionInventoryConfig(PluginConfig):
     description = 'A Plugin for import devices from fusion inventory agent'
 
     # Plugin version
-    version = '0.1'
+    version = '0.3'
 
     # Plugin author
     author = 'Michaël Ricart'
@@ -24,7 +24,25 @@ class FusionInventoryConfig(PluginConfig):
 
     # Default configuration parameter values, if not set by the user
     default_settings = {
-        'loud': True
+        "name":"xml:request.content.hardware.name",
+        "device_role":"object:DeviceRole:unknow",
+        "tenant":None,
+        "manufacturer":"xml:request.content.bios.mmanufacturer",
+        "device_type":"xml:request.content.bios.mmodel",
+        "platform":"xml:request.content.hardware.osname",
+        "serial":"xml:request.content.bios.msn",
+        "asset_tag":"xml:request.content.bios.assettag",
+        "status":"str:active",
+        "site":"object:Site:unknow",
+        "location":None,
+        "rack":None,
+        "position":None,
+        "face":None,
+        "virtual_chassis":None,
+        "vc_position":None,
+        "vc_priority":None,
+        "cluster":None,
+        "comments":None,
     }
 
     # Base URL path. If not set, the plugin name will be used.

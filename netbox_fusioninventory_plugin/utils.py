@@ -3,6 +3,9 @@ from dcim.models import *
 from tenancy.models import *
 from pprint import *
 from django.utils.text import slugify
+from django.conf import settings
+
+PLUGIN_SETTINGS = settings.PLUGINS_CONFIG["netbox_fusioninventory_plugin"]
 
 def created_or_update_device(device_dict):
     related_objects = [
@@ -73,40 +76,13 @@ def created_or_update_device(device_dict):
             to_del.append(k)
     for key in to_del:
         del device_dict[key]
-    pprint(device_dict)
     Device.objects.update_or_create(**device_dict)
 
 
-def soup_to_dict(soup, config):
-    default_config = {
-            "name":"xml:request.content.hardware.name",
-            "device_role":"object:DeviceRole:unknow",
-            "tenant":None,
-            "manufacturer":"xml:request.content.bios.mmanufacturer",
-            "device_type":"xml:request.content.bios.mmodel",
-            "platform":"xml:request.content.hardware.osname",
-            "serial":"xml:request.content.bios.msn",
-            "asset_tag":"xml:request.content.bios.assettag",
-            "status":"str:active",
-            "site":"object:Site:unknow",
-            "location":None,
-            "rack":None,
-            "position":None,
-            "face":None,
-            "virtual_chassis":None,
-            "vc_position":None,
-            "vc_priority":None,
-            "cluster":None,
-            "comments":None,
-            }
-    build_config = default_config
+def soup_to_dict(soup):
+    config = PLUGIN_SETTINGS
     result = {}
-    for k,v in default_config.items():
-        if k in config:
-            build_config[k] = config[k]
-        else:
-            build_config[k] = v
-    for k,v in build_config.items():
+    for k,v in config.items():
         if v:
             value_type, content = v.split(':',1)
             if value_type == "xml":

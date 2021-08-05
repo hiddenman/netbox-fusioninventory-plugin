@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='netbox_fusioninventory_plugin',
-    version='0.3',
+    version='0.4',
     description='A Plugin for import devices from fusion inventory agent',
     long_description=long_description,
     long_description_content_type="text/markdown",

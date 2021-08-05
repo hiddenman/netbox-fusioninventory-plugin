@@ -13,7 +13,7 @@ class FusionInventoryConfig(PluginConfig):
     description = 'A Plugin for import devices from fusion inventory agent'
 
     # Plugin version
-    version = '0.3'
+    version = '0.4'
 
     # Plugin author
     author = 'Michaël Ricart'

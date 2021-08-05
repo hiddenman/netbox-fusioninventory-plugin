@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name='netbox_fusioninventory_plugin',
-    version='0.4',
+    version='0.5',
     description='A Plugin for import devices from fusion inventory agent',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -13,7 +13,7 @@ setup(
     author='Michael Ricart',
     license='BSD License',
     install_requires=[
-        'bs4',
+        'beautifulsoup4',
         'lxml',
         ],
     packages=find_packages(),

@@ -77,7 +77,7 @@ def created_or_update_device(device_dict):
     for key in to_del:
         del device_dict[key]
     if device_dict['serial'] and Device.objects.filter(serial = device_dict['serial']):
-        Device.objects.filter(serial = device_dict['serial']).update(**device_dict)
+        Device.objects.filter(serial = device_dict['serial']).update(**device_dict).save()
     else:
         Device.objects.update_or_create(**device_dict)
 

@@ -15,8 +15,8 @@ class PostXMLView(View):
         decompressed = zlib.decompress(request.body)
         if len(decompressed) > 200:
             xml_soup = bs4.BeautifulSoup(decompressed,features = "lxml")
-            parsed_device = utils.soup_to_dict(xml_soup)
-            utils.created_or_update_device(parsed_device)
+            parsed_device,items = utils.soup_to_dict(xml_soup)
+            utils.created_or_update_device(parsed_device,items)
             return HttpResponse()
         else:
             return HttpResponse('<?xml version="1.0" encoding="UTF-8"?>\n<REPLY>\n  <OPTION>\n <NAME>DOWNLOAD</NAME>\n<PARAM FORCE="1" UPDATE="1" />\n </OPTION>\n<RESPONSE>SEND</RESPONSE>\n <PROLOG_FREQ>1</PROLOG_FREQ>\n</REPLY>\n')

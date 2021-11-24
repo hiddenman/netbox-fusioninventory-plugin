@@ -216,6 +216,20 @@ def created_or_update_device(device_dict, items_array):
     ]
     excluded_ip_addresses6_tuple = tuple(excluded_ip_addresses6)
 
+    # FIXME: Now we ignore mask, so use first octets
+    included_ip_networks = [
+        "192.168.106.",
+        "192.168.108.",
+        "192.168.110."
+    ]
+    included_ip_networks_tuple = tuple(included_ip_networks)
+
+    # FIXME: Now we ignore mask, so use first octets
+    included_ip_networks6 = [
+    ]
+    included_ip_networks6_tuple = tuple(included_ip_networks6)
+
+
     for key in related_objects:
         if device_dict[key]:
             if isinstance(device_dict[key], str):
@@ -328,7 +342,7 @@ def created_or_update_device(device_dict, items_array):
                             ip_address = None
                             ip_address6 = None
                             if ('ipaddress' in item and 'ipmask' in item):
-                                if (not item['ipaddress'] in excluded_ip_addresses):
+                                if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
                                         ip_address, ip_created = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress"]}/{item["ipmask"]}'
@@ -359,7 +373,7 @@ def created_or_update_device(device_dict, items_array):
                                         ),
                                     )
                             elif ('ipaddress' in item):
-                                if (not item['ipaddress'] in excluded_ip_addresses):
+                                if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
                                         ip_address, ip_created = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress"]}'
@@ -391,7 +405,7 @@ def created_or_update_device(device_dict, items_array):
                                     )
 
                             if ('ipaddress6' in item and 'ipmask6' in item):
-                                if (not item['ipaddress6'] in excluded_ip_addresses6):
+                                if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
                                         ip_address6, ip_created6 = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress6"]}/{item["ipmask6"]}'
@@ -422,7 +436,7 @@ def created_or_update_device(device_dict, items_array):
                                         ),
                                     )
                             elif ('ipaddress6' in item):
-                                if (not item['ipaddress6'] in excluded_ip_addresses6):
+                                if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
                                         ip_address6, ip_created6 = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress6"]}'
@@ -1133,7 +1147,7 @@ def created_or_update_device(device_dict, items_array):
                         ),
                     )
 
-                # Remove lost IP-addresses. Take into consideration excluded addresses
+                # Remove lost IP-addresses. Take into consideration excluded addresses and included networks
                 # FIXME: We do not take into consideration the mask!
                 # FIXME: Looks like Django doesn't support tuples for istartswith(), so we have to iterate
                 # FIXME: We already lowered tuples above
@@ -1141,7 +1155,7 @@ def created_or_update_device(device_dict, items_array):
                 for interface in device.interfaces.all():
                     addresses_unlinked = False
                     for address in interface.ip_addresses.all():
-                        if (not str(address.address.ip).lower().startswith(excluded_ip_addresses_tuple) and not str(address.address.ip).lower().startswith(excluded_ip_addresses6_tuple) and not str(address.address.ip).lower().startswith(addresses_list_tuple)):
+                        if (not str(address.address.ip).lower().startswith(excluded_ip_addresses_tuple) and not str(address.address.ip).lower().startswith(excluded_ip_addresses6_tuple) and (str(address.address.ip).lower().startswith(included_ip_networks_tuple) or str(address.address.ip).lower().startswith(included_ip_networks6_tuple)) and not str(address.address.ip).lower().startswith(addresses_list_tuple)):
                             logger.warning(
                                 f'IP address {address.address} does not exist in the new inventory data of the device {device.name}. Unlink it.')
                             # Make a snapshot for the first time
@@ -1197,7 +1211,7 @@ def created_or_update_device(device_dict, items_array):
                             ip_address6 = None
                             interface_updated = False
                             if ('ipaddress' in item and 'ipmask' in item):
-                                if (not item['ipaddress'] in excluded_ip_addresses):
+                                if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
                                         ip_address, ip_created = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress"]}/{item["ipmask"]}'
@@ -1228,7 +1242,7 @@ def created_or_update_device(device_dict, items_array):
                                         ),
                                     )
                             elif ('ipaddress' in item):
-                                if (not item['ipaddress'] in excluded_ip_addresses):
+                                if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
                                         ip_address, ip_created = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress"]}'
@@ -1260,7 +1274,7 @@ def created_or_update_device(device_dict, items_array):
                                     )
 
                             if ('ipaddress6' in item and 'ipmask6' in item):
-                                if (not item['ipaddress6'] in excluded_ip_addresses6):
+                                if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
                                         ip_address6, ip_created6 = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress6"]}/{item["ipmask6"]}'
@@ -1291,7 +1305,7 @@ def created_or_update_device(device_dict, items_array):
                                         ),
                                     )
                             elif ('ipaddress6' in item):
-                                if (not item['ipaddress6'] in excluded_ip_addresses6):
+                                if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
                                         ip_address6, ip_created6 = IPAddress.objects.get_or_create(
                                             address=f'{item["ipaddress6"]}'

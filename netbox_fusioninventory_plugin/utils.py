@@ -158,6 +158,11 @@ def xml_value(xml, key):
 def xml_or_unknown(xml, key):
     return xml.find(key).get_text(strip=True) if (xml.find(key) and xml.find(key).get_text(strip=True) != '') else 'UNKNOWN'
 
+def xmlpath_or_unknown(xml, path, key):
+    # FIXME: Dirty workaround
+    xml = eval('xml.' + path)
+    return xml.find(key).get_text(strip=True) if (xml.find(key) and xml.find(key).get_text(strip=True) != '') else 'UNKNOWN'
+
 
 def xml_or_none(xml, key):
     return xml.find(key).get_text(strip=True) if (xml.find(key) and xml.find(key).get_text(strip=True) != '') else None
@@ -1820,8 +1825,7 @@ def soup_to_dict(soup):
             value_type, content = v.split(':', 1)
             if value_type == "xml":
                 path, tag = content.rsplit('.', 1)
-                device[k] = eval("soup." + path +
-                                 '.find("' + tag + '").get_text()')
+                device[k] = xmlpath_or_unknown(soup, path, tag)
             elif value_type == "object":
                 obj_type, value = content.split(':', 1)
                 if value.isdigit():

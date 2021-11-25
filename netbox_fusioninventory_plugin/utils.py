@@ -169,11 +169,20 @@ def xml_or_none(xml, key):
 
 
 def is_xml_value_zero(xml, key):
+    # FIXME: Dirty workarounds to exclude bad serials
     if (
         (not xml.find(key)) or
-        (((xml.find(key).get_text(strip=True)).startswith('00000000') or
-          (xml.find(key).get_text(strip=True)) == ''))
-    ):
+            (
+                # Zeroes
+                ((xml.find(key).get_text(strip=True)).startswith('00000000') or
+                # Western Digital buggy serial
+                (xml.find(key).get_text(strip=True)) == 'WD' or
+                # Too short serial
+                len(xml.find(key).get_text(strip=True)) <= 5 or
+                # Empty serial
+                (xml.find(key).get_text(strip=True)) == '')
+            )
+        ):
         return True
     else:
         return False
@@ -1295,7 +1304,7 @@ def created_or_update_device(device_dict, items_array):
                                                 f'IP address {ip_address6.address} already exists.')
                                 else:
                                     logger.warning(
-                                        f'Excluded and IP address {item["ipaddress6"]} due to the rules.')
+                                        f'Excluded an IP address {item["ipaddress6"]} due to the rules.')
                                     journal_entries.append(
                                         JournalEntry(
                                             assigned_object=device,

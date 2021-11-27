@@ -1,0 +1,12 @@
+[Unit]
+Description=fusioninventory-agent
+
+[Timer]
+OnCalendar=*-*-* 11:00:00
+AccuracySec=1h
+OnBootSec=5m
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

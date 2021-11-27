@@ -1,0 +1,8 @@
+[Unit]
+Description=fusioninventory-agent
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/fusioninventory -s https://netbox.example.com/plugins/fusion-inventory/ --no-ssl-check
+WorkingDirectory=/usr/share/fusioninventory/
+

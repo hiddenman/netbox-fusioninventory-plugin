@@ -207,6 +207,7 @@ def created_or_update_device(device_dict, items_array):
     device_update_objects = [
         "name",
         "manufacturer",
+        "device_type",
         "platform",
         "serial",
         "asset_tag"
@@ -248,9 +249,6 @@ def created_or_update_device(device_dict, items_array):
                         slug=slugify(device_dict[key]),
                     )[0]
                 elif key == "manufacturer":
-                    # FIXME: Avoid hardcoded names?
-                    if (not device_dict[key] or device_dict[key] == ''):
-                        device_dict[key] = 'UNKNOWN'
                     device_dict[key] = Manufacturer.objects.get_or_create(
                         name=device_dict[key],
                         slug=slugify(device_dict[key]),

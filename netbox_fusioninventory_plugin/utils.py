@@ -314,7 +314,7 @@ def created_or_update_device(device_dict, items_array):
 
             if (device_created):
                 logger.info(
-                    f'Creating a new device {device.name}, serial {device.serial}')
+                    f'Creating a new device {device.name}, serial {device.serial} ({device_dict})')
                 device.save()
                 log = device.to_objectchange(action_create)
                 log.user = user
@@ -945,7 +945,7 @@ def created_or_update_device(device_dict, items_array):
 
             else:
                 logger.info(
-                    f'Updating the existing device {device.name}, serial {device.serial}')
+                    f'Updating the existing device {device.name}, serial {device.serial} ({device_dict})')
 
                 # Remove keys which we are not going to update
                 for k in list(device_dict.keys()):

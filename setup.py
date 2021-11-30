@@ -15,6 +15,7 @@ setup(
     install_requires=[
         'beautifulsoup4',
         'lxml',
+        'unicode-slugify',
         ],
     packages=find_packages(),
     include_package_data=True,

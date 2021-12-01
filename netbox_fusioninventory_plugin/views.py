@@ -11,7 +11,7 @@ import bs4
 class PostXMLView(View):
 
     def post(self, request):
-        request.user = User.objects.get_or_create("FusionInventory")[0]
+        request.user = User.objects.get_or_create(username="FusionInventory")[0]
         decompressed = zlib.decompress(request.body)
         if len(decompressed) > 200:
             xml_soup = bs4.BeautifulSoup(decompressed,features = "lxml")

@@ -19,7 +19,7 @@ action_update = ObjectChangeActionChoices.ACTION_UPDATE
 action_create = ObjectChangeActionChoices.ACTION_CREATE
 action_delete = ObjectChangeActionChoices.ACTION_DELETE
 
-user = User.objects.get(username='admin')
+user = User.objects.get_or_create(username="FusionInventory")[0]
 _uuid = uuid.uuid4()
 
 # Use default Django logger. Settings are in the Django settings.

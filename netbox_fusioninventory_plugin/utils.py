@@ -89,7 +89,7 @@ inventory_settings = {
 """
     },
     "monitors": {
-        "name": "xml_value(xml, 'caption')",
+        "name": "xml_or_unknown(xml, 'caption')",
         "manufacturer": "xml_or_unknown(xml, 'manufacturer')",
         "serial": "lazy:hashlib.md5((item['description']).encode('utf-8')).hexdigest().upper() if is_xml_value_zero(xml, 'serial') else xml_value(xml, 'serial').upper()",
         "label": "'MONITOR'",

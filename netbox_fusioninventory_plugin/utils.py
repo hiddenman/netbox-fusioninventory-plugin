@@ -167,6 +167,9 @@ def xmlpath_or_unknown(xml, path, key):
 def xml_or_none(xml, key):
     return xml.find(key).get_text(strip=True) if (xml.find(key) and xml.find(key).get_text(strip=True) != '') else None
 
+def value_or_none(item, key):
+    return item[key] if (key in item and item[key].strip() != '') else None
+
 
 def is_xml_value_zero(xml, key):
     # FIXME: Dirty workarounds to exclude bad serials
@@ -361,7 +364,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {item["ipaddress"]}/{item["ipmask"]} was not created due to error {e}'
+                                                comments=f'IPv4 address {item["ipaddress"]}/{item["ipmask"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -392,7 +395,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {item["ipaddress"]} was not created due to error {e}'
+                                                comments=f'IPv4 address {item["ipaddress"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -424,7 +427,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {item["ipaddress6"]}/{item["ipmask6"]} was not created due to error {e}'
+                                                comments=f'IPv6 address {item["ipaddress6"]}/{item["ipmask6"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -455,7 +458,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {item["ipaddress6"]} was not created due to error {e}'
+                                                comments=f'IPv6 address {item["ipaddress6"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -474,7 +477,7 @@ def created_or_update_device(device_dict, items_array):
                                         ),
                                     )
 
-                            logger.info(f'Creating interface {item}')
+                            logger.info(f'Creating/updating interface {item}')
                             try:
                                 interface, interface_created = device.interfaces.get_or_create(
                                     name=item['name'])
@@ -485,11 +488,34 @@ def created_or_update_device(device_dict, items_array):
                                         assigned_object=device,
                                         created_by=user,
                                         kind=JournalEntryKindChoices.KIND_WARNING,
-                                        comments=f'Interface {item["name"]} was not created due to error {e}'
+                                        comments=f'Interface {item["name"]} was not created/updated due to the error {e}'
                                     ),
                                 )
                                 continue
+
+                            mac_address = value_or_none(item,'mac_address')
+
                             if (not interface_created):
+                                if (interface.mac_address != mac_address):
+                                    logger.warning(
+                                            f'Got iface:Set a new MAC address {mac_address} to the existing interface {interface.name}')
+                                    interface.snapshot()
+                                    interface.mac_address = mac_address
+                                    interface.save()
+                                    log = interface.to_objectchange(
+                                        action_update)
+                                    log.user = user
+                                    log.request_id = _uuid
+                                    log.save()
+                                    journal_entries.append(
+                                        JournalEntry(
+                                            assigned_object=device,
+                                            created_by=user,
+                                            kind=JournalEntryKindChoices.KIND_WARNING,
+                                            comments=f'Set a new MAC address {mac_address} to the existing interface {interface.name}'
+                                        ),
+                                    )
+
                                 if (ip_address is not None):
                                     interface.snapshot()
                                     if (ip_created):
@@ -508,7 +534,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -582,7 +608,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -639,6 +665,10 @@ def created_or_update_device(device_dict, items_array):
                                             )
 
                             else:
+                                mac_address = value_or_none(item,'mac_address')
+                                interface.mac_address = mac_address
+                                interface.save()
+
                                 if (ip_address is not None):
                                     if (ip_created):
                                         logger.info(
@@ -656,7 +686,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -731,7 +761,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -840,7 +870,7 @@ def created_or_update_device(device_dict, items_array):
                                         assigned_object=device,
                                         created_by=user,
                                         kind=JournalEntryKindChoices.KIND_WARNING,
-                                        comments=f'Item {item} was not added to the device {device.name} due to error {e}'
+                                        comments=f'Item {item} was not added to the device {device.name} due to the error {e}'
                                     ),
                                 )
                                 continue
@@ -864,7 +894,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'Tag {tag} was not created for the inventory item {inventory_item.name} due to error {e}'
+                                                comments=f'Tag {tag} was not created for the inventory item {inventory_item.name} due to the error {e}'
                                             ),
                                         )
 
@@ -913,7 +943,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'Tag {tag} was not created for the inventory item {inventory_item.name} due to error {e}'
+                                                comments=f'Tag {tag} was not created for the inventory item {inventory_item.name} due to the error {e}'
                                             ),
                                         )
 
@@ -1117,14 +1147,6 @@ def created_or_update_device(device_dict, items_array):
                             comments=f'Interface with the name {lost_interface.name} does not exist in the new inventory data of the device {device.name}. Mark it as disabled'
                         ),
                     )
-                    journal_entries.append(
-                        JournalEntry(
-                            assigned_object=lost_interface,
-                            created_by=user,
-                            kind=JournalEntryKindChoices.KIND_WARNING,
-                            comments=f'Interface with the name {lost_interface.name} does not exist in the new inventory data of the device {device.name}. Mark it as disabled'
-                        ),
-                    )
 
                 # Mark interfaces as enabled again when it's found
                 for found_interface in (device.interfaces.filter(enabled=False).filter(name__in=interfaces_list)):
@@ -1140,14 +1162,6 @@ def created_or_update_device(device_dict, items_array):
                     journal_entries.append(
                         JournalEntry(
                             assigned_object=device,
-                            created_by=user,
-                            kind=JournalEntryKindChoices.KIND_WARNING,
-                            comments=f'Disabled interface with the name {found_interface.name} found in the new inventory data of the device {device.name}. Mark it as enabled'
-                        ),
-                    )
-                    journal_entries.append(
-                        JournalEntry(
-                            assigned_object=found_interface,
                             created_by=user,
                             kind=JournalEntryKindChoices.KIND_WARNING,
                             comments=f'Disabled interface with the name {found_interface.name} found in the new inventory data of the device {device.name}. Mark it as enabled'
@@ -1230,7 +1244,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {item["ipaddress"]}/{item["ipmask"]} was not created due to error {e}'
+                                                comments=f'IPv4 address {item["ipaddress"]}/{item["ipmask"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1261,7 +1275,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {item["ipaddress"]} was not created due to error {e}'
+                                                comments=f'IPv4 address {item["ipaddress"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1293,7 +1307,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {item["ipaddress6"]}/{item["ipmask6"]} was not created due to error {e}'
+                                                comments=f'IPv6 address {item["ipaddress6"]}/{item["ipmask6"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1324,7 +1338,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {item["ipaddress6"]} was not created due to error {e}'
+                                                comments=f'IPv6 address {item["ipaddress6"]} was not created due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1354,11 +1368,33 @@ def created_or_update_device(device_dict, items_array):
                                         assigned_object=device,
                                         created_by=user,
                                         kind=JournalEntryKindChoices.KIND_WARNING,
-                                        comments=f'Interface {item["name"]} was not created due to error {e}'
+                                        comments=f'Interface {item["name"]} was not created due to the error {e}'
                                     ),
                                 )
                                 continue
+
+                            mac_address = value_or_none(item,'mac_address')
+
                             if (not interface_created):
+                                if (interface.mac_address != mac_address):
+                                    logger.warning(
+                                            f'Got iface:Set a new MAC address {mac_address} to the existing interface {interface.name}')
+                                    interface.snapshot()
+                                    interface.mac_address = mac_address
+                                    interface.save()
+                                    log = interface.to_objectchange(
+                                        action_update)
+                                    log.user = user
+                                    log.request_id = _uuid
+                                    log.save()
+                                    journal_entries.append(
+                                        JournalEntry(
+                                            assigned_object=device,
+                                            created_by=user,
+                                            kind=JournalEntryKindChoices.KIND_WARNING,
+                                            comments=f'Set a new MAC address {mac_address} to the existing interface {interface.name}'
+                                        ),
+                                    )
                                 interface.snapshot()
                                 if (ip_address is not None):
                                     if (ip_created):
@@ -1380,7 +1416,7 @@ def created_or_update_device(device_dict, items_array):
                                                     assigned_object=device,
                                                     created_by=user,
                                                     kind=JournalEntryKindChoices.KIND_WARNING,
-                                                    comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to error {e}'
+                                                    comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to the error {e}'
                                                 ),
                                             )
                                         else:
@@ -1462,7 +1498,7 @@ def created_or_update_device(device_dict, items_array):
                                                     assigned_object=device,
                                                     created_by=user,
                                                     kind=JournalEntryKindChoices.KIND_WARNING,
-                                                    comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to error {e}'
+                                                    comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to the error {e}'
                                                 ),
                                             )
                                         else:
@@ -1524,6 +1560,10 @@ def created_or_update_device(device_dict, items_array):
                             else:
                                 # Interface has been just created
                                 logger.info(f'Created new interface {item["name"]}')
+                                mac_address = value_or_none(item,'mac_address')
+                                interface.mac_address = mac_address
+                                interface.save()
+
                                 if (ip_address is not None):
                                     if (ip_created):
                                         logger.info(
@@ -1541,7 +1581,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv4 address {ip_address.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1617,7 +1657,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to error {e}'
+                                                comments=f'IPv6 address {ip_address6.address} was not added to the interface {interface.name} due to the error {e}'
                                             ),
                                         )
                                     else:
@@ -1728,7 +1768,7 @@ def created_or_update_device(device_dict, items_array):
                                         assigned_object=device,
                                         created_by=user,
                                         kind=JournalEntryKindChoices.KIND_WARNING,
-                                        comments=f'Item {item} was not updated for the device {device.name} due to error {e}'
+                                        comments=f'Item {item} was not updated for the device {device.name} due to the error {e}'
                                     ),
                                 )
                                 continue
@@ -1756,7 +1796,7 @@ def created_or_update_device(device_dict, items_array):
                                                     assigned_object=device,
                                                     created_by=user,
                                                     kind=JournalEntryKindChoices.KIND_WARNING,
-                                                    comments=f'Tag {tag} was not updated for the inventory item {inventory_item.name} due to error {e}'
+                                                    comments=f'Tag {tag} was not updated for the inventory item {inventory_item.name} due to the error {e}'
                                                 ),
                                             )
                                         else:
@@ -1800,7 +1840,7 @@ def created_or_update_device(device_dict, items_array):
                                                 assigned_object=device,
                                                 created_by=user,
                                                 kind=JournalEntryKindChoices.KIND_WARNING,
-                                                comments=f'Tag {tag} was not updated for the inventory item {inventory_item.name} due to error {e}'
+                                                comments=f'Tag {tag} was not updated for the inventory item {inventory_item.name} due to the error {e}'
                                             ),
                                         )
 

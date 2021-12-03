@@ -72,7 +72,7 @@ inventory_settings = {
         "name": "xml_value(xml, 'caption')",
         "serial": "lazy:hashlib.md5((item['description']).encode('utf-8')).hexdigest().upper() if is_xml_value_zero(xml, 'serialnumber') else xml_value(xml, 'serialnumber').upper()",
         "manufacturer": "xml_or_unknown(xml, 'manufacturer')",
-        "part_id": "xml_or_none(xml, 'productid')",
+        "part_id": "xml_or_none(xml, 'model')",
         "label": "'MEMORY'",
         "asset_tag": "lazy:item['label'] +'-' + item['serial']",
         "tag": "{'name': 'hw:memory', 'slug': 'hw-memory'}",

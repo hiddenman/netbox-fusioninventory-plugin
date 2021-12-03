@@ -374,14 +374,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
+                                    #     ),
+                                    # )
                             elif ('ipaddress' in item):
                                 if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
@@ -405,14 +405,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
+                                    #     ),
+                                    # )
 
                             if ('ipaddress6' in item and 'ipmask6' in item):
                                 if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
@@ -437,14 +437,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress6"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
+                                    #     ),
+                                    # )
                             elif ('ipaddress6' in item):
                                 if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
@@ -468,14 +468,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress6"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
+                                    #     ),
+                                    # )
 
                             logger.info(f'Creating/updating interface {item}')
                             try:
@@ -1254,14 +1254,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
+                                    #     ),
+                                    # )
                             elif ('ipaddress' in item):
                                 if (not item['ipaddress'] in excluded_ip_addresses and item['ipaddress'].startswith(included_ip_networks_tuple)):
                                     try:
@@ -1285,14 +1285,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress"]} due to the rules.'
+                                    #     ),
+                                    # )
 
                             if ('ipaddress6' in item and 'ipmask6' in item):
                                 if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
@@ -1317,14 +1317,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress6"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
+                                    #     ),
+                                    # )
                             elif ('ipaddress6' in item):
                                 if (not item['ipaddress6'] in excluded_ip_addresses6 and item['ipaddress6'].startswith(included_ip_networks6_tuple)):
                                     try:
@@ -1348,14 +1348,14 @@ def created_or_update_device(device_dict, items_array):
                                 else:
                                     logger.warning(
                                         f'Excluded an IP address {item["ipaddress6"]} due to the rules.')
-                                    journal_entries.append(
-                                        JournalEntry(
-                                            assigned_object=device,
-                                            created_by=user,
-                                            kind=JournalEntryKindChoices.KIND_WARNING,
-                                            comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
-                                        ),
-                                    )
+                                    # journal_entries.append(
+                                    #     JournalEntry(
+                                    #         assigned_object=device,
+                                    #         created_by=user,
+                                    #         kind=JournalEntryKindChoices.KIND_WARNING,
+                                    #         comments=f'Excluded an IP address {item["ipaddress6"]} due to the rules.'
+                                    #     ),
+                                    # )
 
                             logger.info(f'Updating/creating interface {item["name"]}. Received data: {item}')
                             try:

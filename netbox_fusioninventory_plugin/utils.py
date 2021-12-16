@@ -480,7 +480,7 @@ def created_or_update_device(device_dict, items_array):
                             logger.info(f'Creating/updating interface {item}')
                             try:
                                 interface, interface_created = device.interfaces.get_or_create(
-                                    name=item['name'])
+                                    name=item['name'][:64])
                             except Exception as e:
                                 logger.error(e)
                                 journal_entries.append(
@@ -1021,7 +1021,7 @@ def created_or_update_device(device_dict, items_array):
                 if ('networks' in items_array.keys()):
                     for item1 in items_array['networks']:
                         if ('name' in item1 and item1['name'].strip() != ''):
-                            interfaces_list.append(item1['name'].strip())
+                            interfaces_list.append(item1['name'].strip()[:64])
                         if ('ipaddress' in item1 and item1['ipaddress'].strip() != ''):
                             addresses_list.append(item1['ipaddress'].strip().lower())
                         if ('ipaddress6' in item1 and item1['ipaddress6'].strip() != ''):
@@ -1360,7 +1360,7 @@ def created_or_update_device(device_dict, items_array):
                             logger.info(f'Updating/creating interface {item["name"]}. Received data: {item}')
                             try:
                                 interface, interface_created = device.interfaces.get_or_create(
-                                    name=item['name'])
+                                    name=item['name'][:64])
                             except Exception as e:
                                 logger.error(e)
                                 journal_entries.append(

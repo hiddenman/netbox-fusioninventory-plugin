@@ -248,45 +248,46 @@ def created_or_update_device(device_dict, items_array):
             if isinstance(device_dict[key], str):
                 if key == "device_role":
                     device_dict[key] = DeviceRole.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "manufacturer":
                     device_dict[key] = Manufacturer.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "tenant":
                     device_dict[key] = Tenant.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "device_type":
+                    # FIXME: Will throw an error if manufacturer wasn't get_or_created() before this key
                     device_dict[key] = DeviceType.objects.get_or_create(
-                        model=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
-                        manufacturer=device_dict["manufacturer"]
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"model": device_dict[key], "manufacturer": device_dict["manufacturer"], "slug": slugify(device_dict[key], only_ascii=True)}
+
                     )[0]
                     del device_dict["manufacturer"]
                 elif key == "platform":
                     device_dict[key] = Platform.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "site":
                     device_dict[key] = Site.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "location":
                     device_dict[key] = Location.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
                 elif key == "rack":
                     device_dict[key] = Rack.objects.get_or_create(
-                        name=device_dict[key],
-                        slug=slugify(device_dict[key], only_ascii=True),
+                        slug=slugify(device_dict[key], only_ascii=True), 
+                        defaults={"name": device_dict[key], "slug": slugify(device_dict[key], only_ascii=True)}
                     )[0]
         else:
             del device_dict[key]
@@ -826,8 +827,8 @@ def created_or_update_device(device_dict, items_array):
                                 if k == "manufacturer":
                                     try:
                                         item[k] = Manufacturer.objects.get_or_create(
-                                            name=item[k],
-                                            slug=slugify(item[k], only_ascii=True),
+                                            slug=slugify(item[k], only_ascii=True), 
+                                            defaults={"name": item[k], "slug": slugify(item[k], only_ascii=True)}
                                         )[0]
                                     except Exception as e:
                                         logger.error(e)
@@ -1724,8 +1725,8 @@ def created_or_update_device(device_dict, items_array):
                                 if k == "manufacturer":
                                     try:
                                         item[k] = Manufacturer.objects.get_or_create(
-                                            name=item[k],
-                                            slug=slugify(item[k], only_ascii=True),
+                                            slug=slugify(item[k], only_ascii=True), 
+                                            defaults={"name": item[k], "slug": slugify(item[k], only_ascii=True)}
                                         )[0]
                                     except Exception as e:
                                         logger.error(e)

@@ -91,7 +91,7 @@ inventory_settings = {
     "monitors": {
         "name": "xml_or_unknown(xml, 'caption')",
         "manufacturer": "xml_or_unknown(xml, 'manufacturer')",
-        "serial": "lazy:hashlib.md5((item['description']).encode('utf-8')).hexdigest().upper() if is_xml_value_zero(xml, 'serial') else xml_value(xml, 'serial').upper()",
+        "serial": "lazy:xml_value(xml, 'serial').upper() if (not is_xml_value_zero(xml, 'serial') and (is_xml_value_zero(xml, 'altserial') or len(xml_value(xml, 'serial')) > len(xml_value(xml, 'altserial')))) else xml_value(xml, 'altserial').upper() if (not is_xml_value_zero(xml, 'altserial')) else hashlib.md5((item['description']).encode('utf-8')).hexdigest().upper()",
         "label": "'MONITOR'",
         "asset_tag": "lazy:item['label'] +'-' + item['serial']",
         "tag": "{'name': 'hw:monitor', 'slug': 'hw-monitor'}",

@@ -177,9 +177,10 @@ def is_xml_value_zero(xml, key):
         (not xml.find(key)) or
             (
                 # Zeroes
-                ((xml.find(key).get_text(strip=True)).startswith('00000000') or
+                ((xml.find(key).get_text(strip=True)).upper().startswith('00000000') or
+                (xml.find(key).get_text(strip=True)).upper().startswith('0X000000') or
                 # Western Digital buggy serial
-                (xml.find(key).get_text(strip=True)) == 'WD' or
+                (xml.find(key).get_text(strip=True)).upper() == 'WD' or
                 # Too short serial
                 len(xml.find(key).get_text(strip=True)) <= 5 or
                 # Empty serial

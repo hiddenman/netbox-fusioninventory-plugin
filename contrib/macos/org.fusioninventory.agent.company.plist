@@ -3,21 +3,26 @@
 <plist version="1.0">
 <dict>
         <key>Label</key>
-        <string>org.fusioninventory.agent</string>
+        <string>org.fusioninventory.agent.company</string>
+
+        <key>EnvironmentVariables</key>
+        <dict>
+           <key>PATH</key>
+           <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        </dict>
 
         <key>ProgramArguments</key>
         <array>
                 <string>/opt/fusioninventory-agent/bin/fusioninventory-agent</string>
                 <string>-s</string>
-                <string>https://netbox.example.com/plugins/fusion-inventory/</string>
+                <string>https://netbox.company.com/plugins/fusion-inventory/</string>
                 <string>--no-ssl-check</string>
+                <string>--no-fork</string>
+                <string>--logger=stderr</string>
         </array>
 
-        <key>UserName</key>
-        <string>root</string>
-
-	<key>StartInterval</key>
-	<integer>86400</integer>
+        <key>StartInterval</key>
+        <integer>86400</integer>
 
         <key>KeepAlive</key>
         <false/>
@@ -26,10 +31,10 @@
         <true/>
 
         <key>StandardErrorPath</key>
-        <string>/tmp/org.fusioninventry.agent.err</string>
+        <string>/tmp/org.fusioninventory.agent.company.err</string>
 
         <key>StandardOutPath</key>
-        <string>/tmp/org.fusioninventory.agent.out</string>
+        <string>/tmp/org.fusioninventory.agent.company.out</string>
 
 </dict>
-</plist>
+

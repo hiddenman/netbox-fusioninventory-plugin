@@ -15,7 +15,7 @@ fusioninventory-agent -s http://netbox.local/plugins/fusion-inventory/
 * Interfaces creating/updating
 * IP addresses creating/updating
 * Automatic tracking of everything
-* History preserving of everything
+* History preserving for everything
 * Full logging (Journal + Change Log)
 * "Lazy" and "computed" variables
 
